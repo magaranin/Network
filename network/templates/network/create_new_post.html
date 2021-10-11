@@ -1,0 +1,18 @@
+{% extends "network/layout.html" %}
+
+
+{% block title %}
+    New Post
+{% endblock %}
+
+{% block body %}
+
+    <form action="{% url 'create_new_post' %}" enctype="multipart/form-data" method="POST">
+        <div class = "new_post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit">    
+        </div>
+    </form>
+
+{% endblock %}
