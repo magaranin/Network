@@ -1,5 +1,23 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    
+    {% for post in posts %}
+        <div class="content">
+            <div class="post_by">
+                <strong>Posted by: </strong>{{ post.owner }}
+            </div>
+            <div class="timestamp">
+                <strong></strong>{{ post.created_date }}
+            </div>
+            <div class="description">
+                {{ post.description }}
+            </div>
+            <div class="like">
+                <img src="https://play-lh.googleusercontent.com/7hAq25yPmjdVuPeEpC8DQnHGsgo-BuNXhRVlSt0IYOXpKj8puu0PCDFsZHlJWkdN8kU" alt="Like" width="22"> {{ post.like }}<strong>&nbsp; Likes</strong>
+            </div>
+        </div>
+        {% empty %}
+            <h4>The are no posts available!</h4>
+    {% endfor %}
 {% endblock %}

@@ -5,13 +5,26 @@ from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 
-from .models import User
+from .models import User, Post
 from django.contrib.auth.decorators import login_required
 from .forms import CreateNewPostForm
 
 def index(request):
-    return render(request, "network/index.html")
+    # Authenticated users view the posts
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(
+            owner = request.user,
+            #created_date = request.created_date
+        )
+        posts = posts.order_by("-created_date").all()
+        return render(request, "network/index.html", {
+            "posts": Post.objects.all()
+        })
 
+    # Everyone else is promped to sign in
+    else:
+        return HttpResponseRedirect(reverse("login"))
+    
 
 def login_view(request):
     if request.method == "POST":
@@ -69,6 +82,8 @@ def create_new_post(request):
     if request.method == "POST":
         form = CreateNewPostForm(request.POST, request.FILES)
         if form.is_valid():
+            post = form.save(commit=False)
+            post.owner = request.user
             post = form.save()
             return HttpResponseRedirect(reverse("index"))
     else:
