@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-
+    
     <form action="{% url 'create_new_post' %}" enctype="multipart/form-data" method="POST">
         <div class = "new_post">
             {% csrf_token %}

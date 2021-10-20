@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import ModelForm, Textarea, widgets
 from .models import User, Post
-from django import forms
 
 class CreateNewPostForm(ModelForm):
     class Meta:

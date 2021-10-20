@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
+from django.forms import ModelForm
 
 from .models import User, Post
 from django.contrib.auth.decorators import login_required
@@ -12,13 +13,9 @@ from .forms import CreateNewPostForm
 def index(request):
     # Authenticated users view the posts
     if request.user.is_authenticated:
-        posts = Post.objects.filter(
-            owner = request.user,
-            #created_date = request.created_date
-        )
-        posts = posts.order_by("-created_date").all()
+        posts = Post.objects.order_by("-created_date").all()
         return render(request, "network/index.html", {
-            "posts": Post.objects.all()
+            "posts": posts
         })
 
     # Everyone else is promped to sign in
@@ -55,6 +52,8 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
+        #first_name = request.POST["first_name"]
+        #last_name = request.POST["last_name"]
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -90,7 +89,46 @@ def create_new_post(request):
         return render(request, "network/create_new_post.html", {
             "form": CreateNewPostForm()
         })
-            
-    
 
-        
+@login_required
+def profile_page(request, profile_owner_id):
+    profile_owner = User.objects.get(pk=profile_owner_id)
+    is_followed = request.user.followed_users.filter(pk=profile_owner_id).exists()
+    posts = Post.objects.filter(
+            owner = profile_owner
+        )
+    posts = posts.order_by("-created_date").all()
+    return render(request, "network/profile_page.html" ,{
+        "is_followed": is_followed,
+        "profile_owner": profile_owner,        
+        "posts": posts
+    })
+
+
+@login_required
+def update_follows(request, profile_owner_id):
+    if request.method == "POST":
+        user = request.user # follow -unfollow profile_owner
+        is_followed = user.followed_users.filter(pk=profile_owner_id).exists()
+        profile_owner = User.objects.get(pk=profile_owner_id)
+        if is_followed:
+            user.followed_users.remove(profile_owner) 
+            profile_owner.followers.remove(user)
+        else:
+            user.followed_users.add(profile_owner) 
+            print('user.followed_users.add(profile_owner)')
+            print(user)
+            print(f'followed_users = {user.followed_users.count()}')
+            print(f'followers = {user.followers.all().count()}')
+            print(profile_owner)
+            print(f'followed_users = {profile_owner.followed_users.count()}')
+            print(f'followers = {profile_owner.followers.all().count()}')
+            profile_owner.followers.add(user)
+            print('profile_owner.followers.add(user)')
+            print(user)
+            print(f'followed_users = {user.followed_users.count()}')
+            print(f'followers = {user.followers.all().count()}')
+            print(profile_owner)
+            print(f'followed_users = {profile_owner.followed_users.count()}')
+            print(f'followers = {profile_owner.followers.all().count()}')
+    return HttpResponseRedirect(reverse("profile_page", args=(profile_owner_id,)))
