@@ -116,19 +116,17 @@ def update_follows(request, profile_owner_id):
             profile_owner.followers.remove(user)
         else:
             user.followed_users.add(profile_owner) 
-            print('user.followed_users.add(profile_owner)')
-            print(user)
-            print(f'followed_users = {user.followed_users.count()}')
-            print(f'followers = {user.followers.all().count()}')
-            print(profile_owner)
-            print(f'followed_users = {profile_owner.followed_users.count()}')
-            print(f'followers = {profile_owner.followers.all().count()}')
             profile_owner.followers.add(user)
-            print('profile_owner.followers.add(user)')
-            print(user)
-            print(f'followed_users = {user.followed_users.count()}')
-            print(f'followers = {user.followers.all().count()}')
-            print(profile_owner)
-            print(f'followed_users = {profile_owner.followed_users.count()}')
-            print(f'followers = {profile_owner.followers.all().count()}')
     return HttpResponseRedirect(reverse("profile_page", args=(profile_owner_id,)))
+
+
+@login_required
+def following(request):
+    #user = request.user # account logged in
+    followed_users = request.user.followed_users.all()
+    posts = Post.objects.filter(
+            owner__in = followed_users
+        )
+    return render(request, "network/following.html", {    
+        "posts": posts
+    })
