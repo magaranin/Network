@@ -9,13 +9,17 @@ from django.forms import ModelForm
 from .models import User, Post
 from django.contrib.auth.decorators import login_required
 from .forms import CreateNewPostForm
+from django.core.paginator import Paginator
 
 def index(request):
     # Authenticated users view the posts
     if request.user.is_authenticated:
         posts = Post.objects.order_by("-created_date").all()
+        paginator = Paginator(posts, 10) # Show 10 contacts per page
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
         return render(request, "network/index.html", {
-            "posts": posts
+            "page_obj": page_obj
         })
 
     # Everyone else is promped to sign in
@@ -52,8 +56,6 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-        #first_name = request.POST["first_name"]
-        #last_name = request.POST["last_name"]
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -96,12 +98,14 @@ def profile_page(request, profile_owner_id):
     is_followed = request.user.followed_users.filter(pk=profile_owner_id).exists()
     posts = Post.objects.filter(
             owner = profile_owner
-        )
-    posts = posts.order_by("-created_date").all()
+        ).order_by("-created_date").all()
+    paginator = Paginator(posts, 10) # Show 10 contacts per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     return render(request, "network/profile_page.html" ,{
         "is_followed": is_followed,
         "profile_owner": profile_owner,        
-        "posts": posts
+        "page_obj": page_obj
     })
 
 
@@ -122,11 +126,13 @@ def update_follows(request, profile_owner_id):
 
 @login_required
 def following(request):
-    #user = request.user # account logged in
     followed_users = request.user.followed_users.all()
     posts = Post.objects.filter(
             owner__in = followed_users
-        )
+        ).order_by("-created_date").all()
+    paginator = Paginator(posts, 10) # Show 10 contacts per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     return render(request, "network/following.html", {    
-        "posts": posts
+        "page_obj": page_obj
     })
