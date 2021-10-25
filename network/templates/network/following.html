@@ -4,7 +4,7 @@
 
     {% for post in page_obj %}
         {% if post.owner is not None %}
-            <div class="content">
+            <div id="post_{{ post.id }}" class="content">
                 <div class="post_by">
                     <strong>Posted by: </strong><a  href="{% url 'profile_page' post.owner.id %}"><strong>{{ post.owner.username }}</strong></a>
                 </div>

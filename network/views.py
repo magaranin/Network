@@ -1,13 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 from django.forms import ModelForm
+import json
 
 from .models import User, Post
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from .forms import CreateNewPostForm
 from django.core.paginator import Paginator
 
@@ -136,3 +139,27 @@ def following(request):
     return render(request, "network/following.html", {    
         "page_obj": page_obj
     })
+
+@csrf_exempt
+@login_required
+def update_post(request, post_id):
+
+    #Query for requested post
+    try:
+        post = Post.objects.get(owner=request.user, pk=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+
+    #Update the description
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("description")  is not None:
+            post.description = data["description"]
+        post.save()
+        return JsonResponse({ "status": "ok" }, status=200)
+    
+    #Email must be via PUT
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)

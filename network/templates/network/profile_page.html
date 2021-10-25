@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 
@@ -30,7 +31,7 @@
     <hr>
     {% for post in page_obj %}
         {% if post.owner == profile_owner %}
-            <div class="content">
+            <div id="post_{{ post.id }}" class="content">
                 <div class="post_by">
                     <strong>Posted by: </strong><a  href="{% url 'profile_page' post.owner.id %}"><strong>{{ post.owner.username }}</strong></a>
                 </div>
@@ -43,6 +44,9 @@
                 <div class="like">
                     <img src="https://play-lh.googleusercontent.com/7hAq25yPmjdVuPeEpC8DQnHGsgo-BuNXhRVlSt0IYOXpKj8puu0PCDFsZHlJWkdN8kU" alt="Like" width="22"> {{ post.like }}<strong>&nbsp; Likes</strong>
                 </div>
+                {% if user.is_authenticated and user == post.owner %}
+                    <button class="edit_button" onclick="edit({{ post.id }})">Edit</button>
+                {% endif %}
             </div>
         {% endif %}
         {% empty %}
@@ -67,4 +71,7 @@
         </span>
     </div>
 
+{% endblock %}
+
+{% block script %}
 {% endblock %}
