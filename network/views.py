@@ -158,8 +158,32 @@ def update_post(request, post_id):
         post.save()
         return JsonResponse({ "status": "ok" }, status=200)
     
-    #Email must be via PUT
+    #Post must be via PUT
     else:
         return JsonResponse({
             "error": "PUT request required."
         }, status=400)
+
+@csrf_exempt
+@login_required
+def like_unlike(request, post_id):
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+
+    if request.method == "POST":
+        user = request.user
+        is_liked = post.likes.filter(pk=user.id).exists()
+        if is_liked:
+            post.likes.remove(user) 
+        else: 
+            post.likes.add(user)   
+        return JsonResponse({ "status": "ok" }, status=200)
+    
+    else:
+        return JsonResponse({
+            "error": "Post request required."
+        }, status=400)
+
+    

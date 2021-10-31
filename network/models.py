@@ -12,7 +12,8 @@ class Post(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null= True, related_name="owned_posts")
     description = models.CharField(max_length = 2000)
-    like = models.IntegerField(default=0)
+    likes = models.ManyToManyField("User", symmetrical=False, related_name="users_likes_set")
+    
 
     def __str__(self):
         return f"{self.owner} added a post on {self.created_date}"

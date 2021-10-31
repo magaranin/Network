@@ -1,5 +1,6 @@
 {% extends "network/layout.html" %}
 {% load static %}
+{% load post_tags %}
 
 {% block body %}
 
@@ -40,9 +41,15 @@
                 </div>
                 <div class="description">
                     {{ post.description }}
-                </div>
-                <div class="like">
-                    <img src="https://play-lh.googleusercontent.com/7hAq25yPmjdVuPeEpC8DQnHGsgo-BuNXhRVlSt0IYOXpKj8puu0PCDFsZHlJWkdN8kU" alt="Like" width="22"> {{ post.like }}<strong>&nbsp; Likes</strong>
+                </div>  
+                <div class="likes" onclick="likeUnlike({{ post.id }})">
+                    <img src="https://play-lh.googleusercontent.com/7hAq25yPmjdVuPeEpC8DQnHGsgo-BuNXhRVlSt0IYOXpKj8puu0PCDFsZHlJWkdN8kU" alt="Likes" width="22"> 
+                    <span class="likeCount">{{ post.likes.count }}</span>
+                    {% if post|is_liked_by:user %}
+                        <strong>&nbsp; <span class="likeUnlikeText">Unlike</span></strong>
+                    {% else %}
+                        <strong>&nbsp; <span class="likeUnlikeText">Like</span></strong>
+                    {% endif %}
                 </div>
                 {% if user.is_authenticated and user == post.owner %}
                     <button class="edit_button" onclick="edit({{ post.id }})">Edit</button>

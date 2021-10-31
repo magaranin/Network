@@ -39,3 +39,29 @@ function updatePost(post_id, new_description) {
     })
     document.querySelectorAll('.edit_button').forEach(edit_button => edit_button.style.display = 'block');
 }
+
+function likeUnlike(post_id) {
+    fetch(`/posts/${post_id}/like_unlike`, {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.error) {
+            alert(result.error);
+        }
+        else {
+            let likeCountElement = document.querySelector(`#post_${post_id} .likeCount`);
+            let countNumber = parseInt(likeCountElement.innerHTML)
+            let likeUnlikeElement = document.querySelector(`#post_${post_id} .likeUnlikeText`)
+            if (likeUnlikeElement.innerHTML === "Like") {
+                likeCountElement.innerHTML = countNumber + 1; 
+                likeUnlikeElement.innerHTML = "Unlike";
+            }
+            else {
+                likeCountElement.innerHTML = countNumber - 1;
+                likeUnlikeElement.innerHTML = "Like";
+            }            
+        }
+    })
+}   
+
