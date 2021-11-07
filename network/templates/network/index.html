@@ -24,10 +24,10 @@
                     {% else %}
                         <strong>&nbsp; <span class="likeUnlikeText">Like</span></strong>
                     {% endif %}
+                    {% if user.is_authenticated and user == post.owner %}
+                    <button class="edit_button btn btn-primary btn-sm" onclick="edit({{ post.id }})"><i class="pencil bi bi-pencil"></i>Edit</button>
+                    {% endif %}
                 </div>
-                {% if user.is_authenticated and user == post.owner %}
-                    <button class="edit_button" onclick="edit({{ post.id }})">Edit</button>
-                {% endif %}
             </div>
         {% endif %}
         {% empty %}
@@ -45,8 +45,8 @@
             </span>
     
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
             {% endif %}
         </span>
     </div>

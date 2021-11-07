@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <h4>Profile Page</h4>
+    <h4 class="title">Profile Page</h4>
 
     <div class="profileDetails">
         <div class="userPage">
@@ -21,9 +21,9 @@
             <form action="{% url 'update_follows' profile_owner.id %}" method="POST">
                 {% csrf_token %}
                 {% if is_followed %}
-                    <button type="submit">Unfollow</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Unfollow</button>
                 {% else %}
-                    <button type="submit">Follow</button> 
+                    <button type="submit" class="btn btn-primary btn-sm">Follow</button> 
                 {% endif %}
             </form>
         </div>               
@@ -50,10 +50,10 @@
                     {% else %}
                         <strong>&nbsp; <span class="likeUnlikeText">Like</span></strong>
                     {% endif %}
+                    {% if user.is_authenticated and user == post.owner %}
+                    <button class="edit_button btn btn-primary btn-sm" onclick="edit({{ post.id }})"><i class="pencil bi bi-pencil"></i>Edit</button>
+                    {% endif %}
                 </div>
-                {% if user.is_authenticated and user == post.owner %}
-                    <button class="edit_button" onclick="edit({{ post.id }})">Edit</button>
-                {% endif %}
             </div>
         {% endif %}
         {% empty %}

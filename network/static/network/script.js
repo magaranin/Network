@@ -8,6 +8,7 @@ function edit(post_id){
     textbox.id = "post_textarea";
     textbox.className = "";
     let submitButton = document.createElement("button");
+    submitButton.className = "btn btn-primary btn-sm saveBtn";
     submitButton.innerHTML = "Save";
     submitButton.onclick = () => { 
         const new_description = document.querySelector('#post_textarea').value;

@@ -3,7 +3,6 @@ textarea {
 }
 
 .content {
-    width: 100 px;
     border-radius: 10px;
     border: 2px solid rgb(3, 3, 3);
     padding: 5px 10px 5px;
@@ -12,13 +11,79 @@ textarea {
     min-width: 450px;
 }
 
+.profileDetails,
+.title,
+.new_post,
+.loginRegister,
+.login,
+.register {
+    padding: 5px 10px 5px;
+    margin: 5px;
+}
+
+.edit_button {
+    margin-left: 15px;
+}
+
+.pencil {
+    margin-right: 5px;
+}
+
 .timestamp {
     margin-left: auto;
     white-space: nowrap;
+    font-size: 13px;
+    color: grey;
 }
 
 .description {
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+#post_textarea {
+    border-radius: 10px;
+    border: 2px solid rgb(40, 70, 236);
+    padding: 5px 10px 5px;
+    font-size: 15px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.saveBtn {
+    margin: 5px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid rgb(40, 70, 236);
+    padding: 5px 10px 5px;
+    margin: 5px;
+    font-size: 15px;
+    width: 97%
+}
+
+.userPage {
+    color: rgb(255, 0, 55);
+}
+
+.title {
+   font-family: "Sans-serif"; 
+   font-size: x-large;
+   color:rgb(40, 70, 236);
+}
+
+.likes:hover {
+    cursor: pointer;
+}
+
+.likeUnlikeText {
+    color: grey;
+}
+
+.likeUnlikeText:hover {
+    color: black;
 }
